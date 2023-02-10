@@ -82,9 +82,10 @@ function StatisticLine({
   value: number | string;
 }) {
   return (
-    <p>
-      {text} {value}
-    </p>
+    <tr>
+      <td className="text-lg">{text}</td>
+      <td className="text-lg">{value}</td>
+    </tr>
   );
 }
 
@@ -102,11 +103,11 @@ function Statistics({
   }
 
   function calculateAverage() {
-    return (good - bad) / calculateTotal();
+    return ((good - bad) / calculateTotal()).toFixed(1);
   }
 
   function calculatePositive() {
-    return (good / calculateTotal()) * 100;
+    return ((good / calculateTotal()) * 100).toFixed(1) + " %";
   }
 
   return (
@@ -116,12 +117,16 @@ function Statistics({
       ) : (
         <>
           <Title text="statistics" />
-          <StatisticLine text="good" value={good} />
-          <StatisticLine text="neutral" value={neutral} />
-          <StatisticLine text="bad" value={bad} />
-          <StatisticLine text="all" value={calculateTotal()} />
-          <StatisticLine text="average" value={calculateAverage()} />
-          <StatisticLine text="positive" value={`${calculatePositive()}%`} />
+          <table>
+            <tbody>
+              <StatisticLine text="good" value={good} />
+              <StatisticLine text="neutral" value={neutral} />
+              <StatisticLine text="bad" value={bad} />
+              <StatisticLine text="all" value={calculateTotal()} />
+              <StatisticLine text="average" value={calculateAverage()} />
+              <StatisticLine text="positive" value={calculatePositive()} />
+            </tbody>
+          </table>
         </>
       )}
     </div>
