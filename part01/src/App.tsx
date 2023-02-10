@@ -50,7 +50,7 @@ function Button({ text, onClick }: { text: string; onClick?: () => void }) {
 
 // Make a title component with tailwind css
 function Title({ text }: { text: string }) {
-  return <h1 className="flex justify-center text-2xl font-bold">{text}</h1>;
+  return <h1 className="m-2 text-2xl font-bold">{text}</h1>;
 }
 
 function GiveFeedback({
@@ -63,11 +63,13 @@ function GiveFeedback({
   incrementBad: () => void;
 }) {
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <Title text="give feedback" />
-      <Button text="good" onClick={incrementGood} />
-      <Button text="neutral" onClick={incrementNeutral} />
-      <Button text="bad" onClick={incrementBad} />
+      <div>
+        <Button text="good" onClick={incrementGood} />
+        <Button text="neutral" onClick={incrementNeutral} />
+        <Button text="bad" onClick={incrementBad} />
+      </div>
     </div>
   );
 }
@@ -94,14 +96,20 @@ function Statistics({
   }
 
   return (
-    <div>
-      <Title text="statistics" />
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {calculateTotal()}</p>
-      <p>average {calculateAverage()}</p>
-      <p>positive {calculatePositive()} %</p>
+    <div className="flex flex-col items-center">
+      {calculateTotal() === 0 ? (
+        <p>No feedback given</p>
+      ) : (
+        <>
+          <Title text="statistics" />
+          <p>good {good}</p>
+          <p>neutral {neutral}</p>
+          <p>bad {bad}</p>
+          <p>all {calculateTotal()}</p>
+          <p>average {calculateAverage()}</p>
+          <p>positive {calculatePositive()} %</p>
+        </>
+      )}
     </div>
   );
 }
