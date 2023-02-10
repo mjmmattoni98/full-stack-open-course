@@ -74,6 +74,20 @@ function GiveFeedback({
   );
 }
 
+function StatisticLine({
+  text,
+  value,
+}: {
+  text: string;
+  value: number | string;
+}) {
+  return (
+    <p>
+      {text} {value}
+    </p>
+  );
+}
+
 function Statistics({
   good,
   neutral,
@@ -102,12 +116,12 @@ function Statistics({
       ) : (
         <>
           <Title text="statistics" />
-          <p>good {good}</p>
-          <p>neutral {neutral}</p>
-          <p>bad {bad}</p>
-          <p>all {calculateTotal()}</p>
-          <p>average {calculateAverage()}</p>
-          <p>positive {calculatePositive()} %</p>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={calculateTotal()} />
+          <StatisticLine text="average" value={calculateAverage()} />
+          <StatisticLine text="positive" value={`${calculatePositive()}%`} />
         </>
       )}
     </div>
