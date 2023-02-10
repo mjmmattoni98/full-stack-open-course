@@ -48,110 +48,136 @@ function Button({ text, onClick }: { text: string; onClick?: () => void }) {
   );
 }
 
-// Make a title component with tailwind css
-function Title({ text }: { text: string }) {
-  return <h1 className="m-2 text-2xl font-bold">{text}</h1>;
-}
+// // Make a title component with tailwind css
+// function Title({ text }: { text: string }) {
+//   return <h1 className="m-2 text-2xl font-bold">{text}</h1>;
+// }
 
-function GiveFeedback({
-  incrementGood,
-  incrementNeutral,
-  incrementBad,
-}: {
-  incrementGood: () => void;
-  incrementNeutral: () => void;
-  incrementBad: () => void;
-}) {
-  return (
-    <div className="flex flex-col items-center">
-      <Title text="give feedback" />
-      <div>
-        <Button text="good" onClick={incrementGood} />
-        <Button text="neutral" onClick={incrementNeutral} />
-        <Button text="bad" onClick={incrementBad} />
-      </div>
-    </div>
-  );
-}
+// function GiveFeedback({
+//   incrementGood,
+//   incrementNeutral,
+//   incrementBad,
+// }: {
+//   incrementGood: () => void;
+//   incrementNeutral: () => void;
+//   incrementBad: () => void;
+// }) {
+//   return (
+//     <div className="flex flex-col items-center">
+//       <Title text="give feedback" />
+//       <div>
+//         <Button text="good" onClick={incrementGood} />
+//         <Button text="neutral" onClick={incrementNeutral} />
+//         <Button text="bad" onClick={incrementBad} />
+//       </div>
+//     </div>
+//   );
+// }
 
-function StatisticLine({
-  text,
-  value,
-}: {
-  text: string;
-  value: number | string;
-}) {
-  return (
-    <tr>
-      <td className="text-lg">{text}</td>
-      <td className="text-lg">{value}</td>
-    </tr>
-  );
-}
+// function StatisticLine({
+//   text,
+//   value,
+// }: {
+//   text: string;
+//   value: number | string;
+// }) {
+//   return (
+//     <tr>
+//       <td className="text-lg">{text}</td>
+//       <td className="text-lg">{value}</td>
+//     </tr>
+//   );
+// }
 
-function Statistics({
-  good,
-  neutral,
-  bad,
-}: {
-  good: number;
-  neutral: number;
-  bad: number;
-}) {
-  function calculateTotal() {
-    return good + neutral + bad;
-  }
+// function Statistics({
+//   good,
+//   neutral,
+//   bad,
+// }: {
+//   good: number;
+//   neutral: number;
+//   bad: number;
+// }) {
+//   function calculateTotal() {
+//     return good + neutral + bad;
+//   }
 
-  function calculateAverage() {
-    return ((good - bad) / calculateTotal()).toFixed(1);
-  }
+//   function calculateAverage() {
+//     return ((good - bad) / calculateTotal()).toFixed(1);
+//   }
 
-  function calculatePositive() {
-    return ((good / calculateTotal()) * 100).toFixed(1) + " %";
-  }
+//   function calculatePositive() {
+//     return ((good / calculateTotal()) * 100).toFixed(1) + " %";
+//   }
 
-  return (
-    <div className="flex flex-col items-center">
-      {calculateTotal() === 0 ? (
-        <p>No feedback given</p>
-      ) : (
-        <>
-          <Title text="statistics" />
-          <table>
-            <tbody>
-              <StatisticLine text="good" value={good} />
-              <StatisticLine text="neutral" value={neutral} />
-              <StatisticLine text="bad" value={bad} />
-              <StatisticLine text="all" value={calculateTotal()} />
-              <StatisticLine text="average" value={calculateAverage()} />
-              <StatisticLine text="positive" value={calculatePositive()} />
-            </tbody>
-          </table>
-        </>
-      )}
-    </div>
-  );
-}
+//   return (
+//     <div className="flex flex-col items-center">
+//       <Title text="statistics" />
+//       {calculateTotal() === 0 ? (
+//         <p>No feedback given</p>
+//       ) : (
+//         <table>
+//           <tbody>
+//             <StatisticLine text="good" value={good} />
+//             <StatisticLine text="neutral" value={neutral} />
+//             <StatisticLine text="bad" value={bad} />
+//             <StatisticLine text="all" value={calculateTotal()} />
+//             <StatisticLine text="average" value={calculateAverage()} />
+//             <StatisticLine text="positive" value={calculatePositive()} />
+//           </tbody>
+//         </table>
+//       )}
+//     </div>
+//   );
+// }
+
+
 
 function App() {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
+  const [selected, setSelected] = useState(0)
 
-  const incrementGood = () => setGood(good + 1);
-  const incrementNeutral = () => setNeutral(neutral + 1);
-  const incrementBad = () => setBad(bad + 1);
+  function getRandomInt() {
+    return Math.floor(Math.random() * anecdotes.length);
+  }
+
+  function updateSelected() {
+    setSelected(getRandomInt())
+  }
 
   return (
     <div className="bg-cyan-100 flex flex-col items-center w-screen h-screen">
-      <GiveFeedback
-        incrementGood={incrementGood}
-        incrementNeutral={incrementNeutral}
-        incrementBad={incrementBad}
-      />
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <p className="text-lg max-w-md">{anecdotes[selected]}</p>
+      <Button text="next anecdote" onClick={updateSelected} />
     </div>
-  );
+  )
+  // const [good, setGood] = useState(0);
+  // const [neutral, setNeutral] = useState(0);
+  // const [bad, setBad] = useState(0);
+
+  // const incrementGood = () => setGood(good + 1);
+  // const incrementNeutral = () => setNeutral(neutral + 1);
+  // const incrementBad = () => setBad(bad + 1);
+
+  // return (
+  //   <div className="bg-cyan-100 flex flex-col items-center w-screen h-screen">
+  //     <GiveFeedback
+  //       incrementGood={incrementGood}
+  //       incrementNeutral={incrementNeutral}
+  //       incrementBad={incrementBad}
+  //     />
+  //     <Statistics good={good} neutral={neutral} bad={bad} />
+  //   </div>
+  // );
   // const course = {
   //   name: "Half Stack application development",
   //   parts: [
