@@ -81,12 +81,27 @@ function Statistics({
   neutral: number;
   bad: number;
 }) {
+  function calculateTotal() {
+    return good + neutral + bad;
+  }
+
+  function calculateAverage() {
+    return (good - bad) / calculateTotal();
+  }
+
+  function calculatePositive() {
+    return (good / calculateTotal()) * 100;
+  }
+
   return (
     <div>
       <Title text="statistics" />
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+      <p>all {calculateTotal()}</p>
+      <p>average {calculateAverage()}</p>
+      <p>positive {calculatePositive()} %</p>
     </div>
   );
 }
