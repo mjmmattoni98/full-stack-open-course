@@ -48,10 +48,10 @@ function Button({ text, onClick }: { text: string; onClick?: () => void }) {
   );
 }
 
-// // Make a title component with tailwind css
-// function Title({ text }: { text: string }) {
-//   return <h1 className="m-2 text-2xl font-bold">{text}</h1>;
-// }
+// Make a title component with tailwind css
+function Title({ text }: { text: string }) {
+  return <h1 className="m-2 text-2xl font-bold">{text}</h1>;
+}
 
 // function GiveFeedback({
 //   incrementGood,
@@ -162,12 +162,18 @@ function App() {
 
   return (
     <div className="bg-cyan-100 flex flex-col items-center w-screen h-screen">
+      <Title text="Anecdote of the day" />
       <p className="text-lg max-w-md">{anecdotes[selected]}</p>
       <p className="text-lg">has {votes[selected]} votes</p>
       <div>
         <Button text="vote" onClick={updateVotes} />
         <Button text="next anecdote" onClick={updateSelected} />
       </div>
+      <Title text="Anecdote with most votes" />
+      <p className="text-lg max-w-md">
+        {anecdotes[votes.indexOf(Math.max(...votes))]}
+      </p>
+      <p className="text-lg">has {Math.max(...votes)} votes</p>
     </div>
   );
   // const [good, setGood] = useState(0);
