@@ -153,6 +153,7 @@ function App() {
   function updateSelected() {
     setSelected(getRandomInt());
   }
+  
 
   function updateVotes() {
     const copy = [...votes];
