@@ -33,20 +33,20 @@ function Part({ part }: { part: IPart }) {
 }
 
 function Total({ parts }: { parts: IPart[] }) {
+  const exercises = parts.reduce((carry, part) => carry + part.exercises, 0)
   return (
-    <p className="m-2 text-lg">
-      Number of exercises{" "}
-      {parts.reduce((carry, part) => carry + part.exercises, 0)}
+    <p className="m-2 text-lg font-bold">
+      total of {exercises} exercises
     </p>
   );
 }
 
 function Course({ course }: { course: ICourse }) {
   return (
-    <div>
+    <div className="bg-cyan-100 flex flex-col items-center w-screen h-screen">
       <Header course={course.name} />
       <Content parts={course.parts} />
-      {/* <Total parts={course.parts} /> */}
+      <Total parts={course.parts} />
     </div>
   );
 }
