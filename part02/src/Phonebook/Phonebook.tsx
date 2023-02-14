@@ -34,14 +34,28 @@ function Input({
   );
 }
 
+function Person({ name }: { name: string }) {
+  return <p className="m-2 text-lg">{name}</p>;
+}
+
 function Phonebook() {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
+  function addPerson(event: React.FormEvent) {
+    event.preventDefault();
+    const personObject = {
+      name: newName,
+    };
+    const newPersons = [...persons, personObject];
+    setPersons(newPersons);
+    setNewName("");
+  }
+
   return (
     <div>
       <Title title="Phonebook" />
-      <form>
+      <form onSubmit={addPerson}>
         <Input
           name="name"
           value={newName}
@@ -50,7 +64,9 @@ function Phonebook() {
         <Button text="add" />
       </form>
       <Title title="Numbers" />
-      ...
+      {persons.map((person) => (
+        <Person key={person.name} name={person.name} />
+      ))}
     </div>
   );
 }
