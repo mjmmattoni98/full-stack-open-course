@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+type User = {
+  name: string;
+  phone: string;
+};
+
 function Title({ title }: { title: string }) {
   return <h2 className="font-bold text-3xl m-2">{title}</h2>;
 }
@@ -34,19 +39,31 @@ function Input({
   );
 }
 
-function Person({ name }: { name: string }) {
-  return <p className="m-2 text-lg">{name}</p>;
+function Person({ user }: { user: User }) {
+  return (
+    <div>
+      <p className="m-2 text-lg">
+        {user.name} {user.phone}
+      </p>
+    </div>
+  );
 }
 
 function Phonebook() {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([{ name: "Arto Hellas", phone: '213-123-123' }]);
   const [newName, setNewName] = useState("");
+  const [newPhone, setNewPhone] = useState("");
 
   function addPerson(event: React.FormEvent) {
     event.preventDefault();
     const personObject = {
       name: newName,
+      phone: newPhone,
     };
+    if (newName === "" || newPhone === "") {
+      alert("Please fill in the form");
+      return;
+    }
     if (persons.find((person) => person.name === newName)) {
       alert(`${newName} is already added to phonebook`);
       return;
@@ -54,6 +71,7 @@ function Phonebook() {
     const newPersons = [...persons, personObject];
     setPersons(newPersons);
     setNewName("");
+    setNewPhone("");
   }
 
   return (
@@ -65,11 +83,16 @@ function Phonebook() {
           value={newName}
           onChange={(event) => setNewName(event.target.value)}
         />
+        <Input
+          name="phone"
+          value={newPhone}
+          onChange={(event) => setNewPhone(event.target.value)}
+        />
         <Button text="add" />
       </form>
       <Title title="Numbers" />
       {persons.map((person) => (
-        <Person key={person.name} name={person.name} />
+        <Person key={person.name} user={person} />
       ))}
     </div>
   );
