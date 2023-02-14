@@ -47,6 +47,10 @@ function Phonebook() {
     const personObject = {
       name: newName,
     };
+    if (persons.find((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    }
     const newPersons = [...persons, personObject];
     setPersons(newPersons);
     setNewName("");
