@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type User = {
   id: number;
@@ -98,15 +98,19 @@ function Phonebook() {
     setPersons(newPersons);
     setNewName("");
     setNewPhone("");
-    filterPersons(filterPerson);
+    // filterPersons(filterPerson);
   }
+
+  useEffect(() => {
+    filterPersons(filterPerson);
+  }, [persons]);
 
   return (
     <div>
       <Title title="Phonebook" />
       <Input
         name="filter shown with"
-        value=""
+        value={filterPerson}
         onChange={(event) => filterPersons(event.target.value)}
       />
       <Title title="Add a new" />

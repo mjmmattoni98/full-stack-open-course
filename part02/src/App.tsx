@@ -3,7 +3,7 @@ import Phonebook from "./Phonebook/Phonebook";
 
 function App() {
   return (
-    <div className="bg-cyan-100 flex flex-col items-center w-screen h-screen">
+    <div className="bg-cyan-100 flex flex-col justify-center items-center w-screen h-screen">
       {/* <Courses /> */}
       <Phonebook />
     </div>
