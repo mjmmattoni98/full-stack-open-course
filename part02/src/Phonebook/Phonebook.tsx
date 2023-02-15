@@ -59,6 +59,36 @@ function Person({ user }: { user: User }) {
   );
 }
 
+function AddPersonForm({
+  addPerson,
+  newName,
+  setNewName,
+  newPhone,
+  setNewPhone,
+}: {
+  addPerson: (event: React.FormEvent) => void;
+  newName: string;
+  setNewName: (value: string) => void;
+  newPhone: string;
+  setNewPhone: (value: string) => void;
+}) {
+  return (
+    <form onSubmit={addPerson}>
+      <Input
+        name="name"
+        value={newName}
+        onChange={(event) => setNewName(event.target.value)}
+      />
+      <Input
+        name="phone"
+        value={newPhone}
+        onChange={(event) => setNewPhone(event.target.value)}
+      />
+      <Button type={"submit"} text="add" />
+    </form>
+  );
+}
+
 function Phonebook() {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", phone: "040-123456", id: 1 },
@@ -114,19 +144,13 @@ function Phonebook() {
         onChange={(event) => filterPersons(event.target.value)}
       />
       <Title title="Add a new" />
-      <form onSubmit={addPerson}>
-        <Input
-          name="name"
-          value={newName}
-          onChange={(event) => setNewName(event.target.value)}
-        />
-        <Input
-          name="phone"
-          value={newPhone}
-          onChange={(event) => setNewPhone(event.target.value)}
-        />
-        <Button type={"submit"} text="add" />
-      </form>
+      <AddPersonForm
+        addPerson={addPerson}
+        newName={newName}
+        setNewName={setNewName}
+        newPhone={newPhone}
+        setNewPhone={setNewPhone}
+      />
       <Title title="Numbers" />
       {filteredPersons.map((person) => (
         <Person key={person.name} user={person} />
