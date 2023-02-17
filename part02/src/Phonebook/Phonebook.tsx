@@ -49,11 +49,18 @@ function Input({
   );
 }
 
-function Person({ user, onCLick }: { user: IPerson; onCLick?: (event: React.MouseEvent<HTMLButtonElement>) => void }) {
+function Person({
+  user,
+  onCLick,
+}: {
+  user: IPerson;
+  onCLick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}) {
   return (
     <div>
       <p className="m-2 text-lg">
-        {user.name} {user.phone} <Button text="delete" type="button" onClick={onCLick} />
+        {user.name} {user.phone}{" "}
+        <Button text="delete" type="button" onClick={onCLick} />
       </p>
     </div>
   );
@@ -115,8 +122,10 @@ function Phonebook() {
       alert("Please fill in the form");
       return;
     }
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    const oldPerson = persons.find((person) => person.name === newName);
+    if (oldPerson) {
+      // alert(`${newName} is already added to phonebook`);
+      updatePerson(oldPerson.id, {...personObject, id: oldPerson.id});
       return;
     }
     PersonService.create(personObject).then((person) => {
@@ -124,6 +133,22 @@ function Phonebook() {
       setNewName("");
       setNewPhone("");
     });
+  }
+
+  function updatePerson(id: number, person: IPerson) {
+    if (
+      window.confirm(
+        `${person.name} is already added to phonebook, replace the old number with a new one?`
+      )
+    ) {
+      PersonService.update(id, person).then((newPerson) => {
+        setPersons(
+          persons.map((oldPerson) => (oldPerson.id !== id ? oldPerson : newPerson))
+        );
+        setNewName("");
+        setNewPhone("");  
+      });
+    }
   }
 
   function removePerson(id: number) {
