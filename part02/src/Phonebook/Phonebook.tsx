@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import IPerson from "./types";
 import PersonService from "./services/persons";
+import "../index.css";
 
 function Title({ title }: { title: string }) {
   return <h2 className="font-bold text-3xl m-2">{title}</h2>;
@@ -125,7 +126,7 @@ function Phonebook() {
     const oldPerson = persons.find((person) => person.name === newName);
     if (oldPerson) {
       // alert(`${newName} is already added to phonebook`);
-      updatePerson(oldPerson.id, {...personObject, id: oldPerson.id});
+      updatePerson(oldPerson.id, { ...personObject, id: oldPerson.id });
       return;
     }
     PersonService.create(personObject).then((person) => {
@@ -143,10 +144,12 @@ function Phonebook() {
     ) {
       PersonService.update(id, person).then((newPerson) => {
         setPersons(
-          persons.map((oldPerson) => (oldPerson.id !== id ? oldPerson : newPerson))
+          persons.map((oldPerson) =>
+            oldPerson.id !== id ? oldPerson : newPerson
+          )
         );
         setNewName("");
-        setNewPhone("");  
+        setNewPhone("");
       });
     }
   }
