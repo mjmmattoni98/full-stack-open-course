@@ -18,4 +18,9 @@ const update = (id: number, newObject: IPerson): Promise<IPerson> => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, update }
+const remove = (id: number): Promise<IPerson> => {
+  const request = axios.delete(`${baseUrl}/${id}`)
+  return request.then(response => response.data)
+}
+
+export default { getAll, create, update, remove }

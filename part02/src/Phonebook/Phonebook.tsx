@@ -10,14 +10,17 @@ function Title({ title }: { title: string }) {
 function Button({
   text,
   type,
+  onClick,
 }: {
   text: string;
   type: "button" | "submit" | "reset";
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
   return (
     <button
       type={type}
       className="m-2 px-4 py-2 bg-blue-500 text-white rounded"
+      onClick={onClick}
     >
       {text}
     </button>
@@ -46,11 +49,11 @@ function Input({
   );
 }
 
-function Person({ user }: { user: IPerson }) {
+function Person({ user, onCLick }: { user: IPerson; onCLick?: (event: React.MouseEvent<HTMLButtonElement>) => void }) {
   return (
     <div>
       <p className="m-2 text-lg">
-        {user.name} {user.phone}
+        {user.name} {user.phone} <Button text="delete" type="button" onClick={onCLick} />
       </p>
     </div>
   );
@@ -123,6 +126,17 @@ function Phonebook() {
     });
   }
 
+  function removePerson(id: number) {
+    const person = persons.find((person) => person.id === id);
+    if (person) {
+      if (window.confirm(`Delete ${person.name} ?`)) {
+        PersonService.remove(id).then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        });
+      }
+    }
+  }
+
   const hook = () => {
     axios.get("http://localhost:3001/persons").then((response) => {
       setPersons(response.data);
@@ -153,7 +167,11 @@ function Phonebook() {
       />
       <Title title="Numbers" />
       {filteredPersons.map((person) => (
-        <Person key={person.name} user={person} />
+        <Person
+          key={person.id}
+          user={person}
+          onCLick={() => removePerson(person.id)}
+        />
       ))}
     </div>
   );
