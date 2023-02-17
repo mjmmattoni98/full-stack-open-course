@@ -1,11 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-type User = {
-  id: number;
-  name: string;
-  phone: string;
-};
+import IPerson from "./types";
+import PersonService from "./services/persons";
 
 function Title({ title }: { title: string }) {
   return <h2 className="font-bold text-3xl m-2">{title}</h2>;
@@ -50,7 +46,7 @@ function Input({
   );
 }
 
-function Person({ user }: { user: User }) {
+function Person({ user }: { user: IPerson }) {
   return (
     <div>
       <p className="m-2 text-lg">
@@ -91,7 +87,7 @@ function AddPersonForm({
 }
 
 function Phonebook() {
-  const [persons, setPersons] = useState(Array<User>);
+  const [persons, setPersons] = useState(Array<IPerson>);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filterPerson, setFilterPerson] = useState("");
@@ -120,11 +116,11 @@ function Phonebook() {
       alert(`${newName} is already added to phonebook`);
       return;
     }
-    const newPersons = [...persons, personObject];
-    setPersons(newPersons);
-    setNewName("");
-    setNewPhone("");
-    // filterPersons(filterPerson);
+    PersonService.create(personObject).then((person) => {
+      setPersons([...persons].concat(person));
+      setNewName("");
+      setNewPhone("");
+    });
   }
 
   const hook = () => {
