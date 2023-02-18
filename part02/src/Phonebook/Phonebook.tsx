@@ -28,6 +28,10 @@ function Button({
   );
 }
 
+function Notification({ message }: { message: string }) {
+  return <div className="success">{message}</div>;
+}
+
 function Input({
   name,
   value,
@@ -103,6 +107,7 @@ function Phonebook() {
   const [newPhone, setNewPhone] = useState("");
   const [filterPerson, setFilterPerson] = useState("");
   const [filteredPersons, setFilteredPersons] = useState(persons);
+  const [notification, setNotification] = useState("");
 
   function filterPersons(value: string) {
     setFilterPerson(value);
@@ -133,6 +138,11 @@ function Phonebook() {
       setPersons([...persons].concat(person));
       setNewName("");
       setNewPhone("");
+      setNotification(`Added ${person.name}`);
+      setTimeout(() => {
+        setNotification("");
+      }
+      , 5000);
     });
   }
 
@@ -180,6 +190,7 @@ function Phonebook() {
   return (
     <div>
       <Title title="Phonebook" />
+      {notification ? <Notification message={notification} /> : null}
       <Input
         name="filter shown with"
         value={filterPerson}
