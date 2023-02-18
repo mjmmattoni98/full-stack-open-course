@@ -28,8 +28,10 @@ function Button({
   );
 }
 
-function Notification({ message }: { message: string }) {
-  return <div className="success">{message}</div>;
+function Notification({ message, type }: { message: string; type: string }) {
+  return (
+    <div className={type === "success" ? "success" : "error"}>{message}</div>
+  );
 }
 
 function Input({
@@ -108,6 +110,7 @@ function Phonebook() {
   const [filterPerson, setFilterPerson] = useState("");
   const [filteredPersons, setFilteredPersons] = useState(persons);
   const [notification, setNotification] = useState("");
+  const [type, setType] = useState("");
 
   function filterPersons(value: string) {
     setFilterPerson(value);
@@ -138,11 +141,12 @@ function Phonebook() {
       setPersons([...persons].concat(person));
       setNewName("");
       setNewPhone("");
+      setType("success");
       setNotification(`Added ${person.name}`);
       setTimeout(() => {
+        setType("");
         setNotification("");
-      }
-      , 5000);
+      }, 5000);
     });
   }
 
@@ -152,15 +156,27 @@ function Phonebook() {
         `${person.name} is already added to phonebook, replace the old number with a new one?`
       )
     ) {
-      PersonService.update(id, person).then((newPerson) => {
-        setPersons(
-          persons.map((oldPerson) =>
-            oldPerson.id !== id ? oldPerson : newPerson
-          )
-        );
-        setNewName("");
-        setNewPhone("");
-      });
+      PersonService.update(id, person)
+        .then((newPerson) => {
+          setPersons(
+            persons.map((oldPerson) =>
+              oldPerson.id !== id ? oldPerson : newPerson
+            )
+          );
+          setNewName("");
+          setNewPhone("");
+        })
+        .catch((_) => {
+          setType("error");
+          setNotification(
+            `Information of ${person.name} has already been removed from server`
+          );
+          setPersons(persons.filter((person) => person.id !== id));
+          setTimeout(() => {
+            setType("");
+            setNotification("");
+          }, 5000);
+        });
     }
   }
 
@@ -190,7 +206,9 @@ function Phonebook() {
   return (
     <div>
       <Title title="Phonebook" />
-      {notification ? <Notification message={notification} /> : null}
+      {notification ? (
+        <Notification message={notification} type={type} />
+      ) : null}
       <Input
         name="filter shown with"
         value={filterPerson}
