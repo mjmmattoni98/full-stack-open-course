@@ -69,6 +69,10 @@ function Countries() {
     setSearch(event.target.value);
   };
 
+  function handleShowClick(name: string) {
+    setSearch(name);
+  }
+
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
@@ -95,7 +99,10 @@ function Countries() {
       ) : (
         <ul>
           {filteredCountries.map((country) => (
-            <li key={country.name.common}>{country.name.common}</li>
+            <div key={country.name.common} className="flex flex-row items-center justify-center">
+              <li>{country.name.common}</li>
+              <Button text="Show" type="button" onClick={() => handleShowClick(country.name.common)}/>
+            </div>
           ))}
         </ul>
       )}
