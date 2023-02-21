@@ -9,6 +9,7 @@ type ICountry = {
   area: number;
   languages: any;
   flag: string;
+  latlng: number[];
 };
 
 export default ICountry;

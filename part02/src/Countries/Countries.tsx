@@ -64,6 +64,8 @@ function Country({ country }: { country: ICountry }) {
 function Countries() {
   const [countries, setCountries] = useState([] as ICountry[]);
   const [search, setSearch] = useState("");
+  const [weather, setWeather] = useState({} as any);
+  const [icon, setIcon] = useState();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -76,6 +78,17 @@ function Countries() {
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (filteredCountries.length === 1) {
+    const capital = filteredCountries[0].capital[0];
+    CountriesApi.getWeather(capital).then((data) => {
+      setWeather(data);
+    });
+    console.log(weather);
+    CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
+      setIcon(data);
+    });
+  }
 
   const hook = () => {
     CountriesApi.getAll().then((data) => {
@@ -95,13 +108,28 @@ function Countries() {
       {filteredCountries.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : filteredCountries.length === 1 ? (
-        <Country country={filteredCountries[0]} />
+        <>
+          <Country country={filteredCountries[0]} />
+          <div>
+            <h2>Weather in {weather.location.name}</h2>
+            <p>Temperature: {weather.main.temp} Celsius</p>
+            <img src={icon} alt="weather icon" />
+            <p>Wind: {weather.wind.speed} m/s</p>
+          </div>
+        </>
       ) : (
         <ul>
           {filteredCountries.map((country) => (
-            <div key={country.name.common} className="flex flex-row items-center justify-center">
+            <div
+              key={country.name.common}
+              className="flex flex-row items-center justify-center"
+            >
               <li>{country.name.common}</li>
-              <Button text="Show" type="button" onClick={() => handleShowClick(country.name.common)}/>
+              <Button
+                text="Show"
+                type="button"
+                onClick={() => handleShowClick(country.name.common)}
+              />
             </div>
           ))}
         </ul>
