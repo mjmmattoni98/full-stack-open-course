@@ -9,7 +9,9 @@ const getAll = (): Promise<ICountry[]> => {
 };
 
 function getWeather(city: string) {
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${import.meta.env.VITE_WEATHER_API_KEY}`;
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${
+    import.meta.env.VITE_WEATHER_API_KEY
+  }`;
   const request = axios.get(url);
   return request.then((response) => response.data);
 }

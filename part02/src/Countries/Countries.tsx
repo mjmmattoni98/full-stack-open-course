@@ -66,29 +66,39 @@ function Countries() {
   const [search, setSearch] = useState("");
   const [weather, setWeather] = useState({} as any);
   const [icon, setIcon] = useState();
+  const [country, setCountry] = useState({} as ICountry);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
+    if (filteredCountries.length === 1) setCountry(filteredCountries[0]);
+    else setCountry({} as ICountry);
   };
 
   function handleShowClick(name: string) {
     setSearch(name);
+    setCountry(filteredCountries[0]);
   }
 
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (filteredCountries.length === 1) {
-    const capital = filteredCountries[0].capital[0];
-    CountriesApi.getWeather(capital).then((data) => {
-      setWeather(data);
-    });
-    console.log(weather);
-    CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
-      setIcon(data);
-    });
-  }
+  useEffect(() => {
+    if (country.capital) {
+      CountriesApi.getWeather(country.capital).then((data) => {
+        setWeather(data);
+      });
+    }
+  }, [country]);
+
+  useEffect(() => {
+    if (weather.weather) {
+      console.log(weather);
+      CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
+        setIcon(data);
+      });
+    }
+  }, [weather]);
 
   const hook = () => {
     CountriesApi.getAll().then((data) => {
@@ -110,12 +120,14 @@ function Countries() {
       ) : filteredCountries.length === 1 ? (
         <>
           <Country country={filteredCountries[0]} />
-          <div>
-            <h2>Weather in {weather.location.name}</h2>
-            <p>Temperature: {weather.main.temp} Celsius</p>
-            <img src={icon} alt="weather icon" />
-            <p>Wind: {weather.wind.speed} m/s</p>
-          </div>
+          {weather.main ? (
+            <div>
+              <h2>Weather in {filteredCountries[0].capital}</h2>
+              <p>Temperature: {weather.main.temp} Celsius</p>
+              <img src={icon} alt="weather icon" />
+              <p>Wind: {weather.wind.speed} m/s</p>
+            </div>
+          ) : null}
         </>
       ) : (
         <ul>
