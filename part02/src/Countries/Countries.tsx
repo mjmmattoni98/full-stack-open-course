@@ -66,39 +66,45 @@ function Countries() {
   const [search, setSearch] = useState("");
   const [weather, setWeather] = useState({} as any);
   const [icon, setIcon] = useState();
-  const [country, setCountry] = useState({} as ICountry);
+  const [filteredCountries, setFilteredCountries] = useState([] as ICountry[]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-    if (filteredCountries.length === 1) setCountry(filteredCountries[0]);
-    else setCountry({} as ICountry);
+    const filtered = countries.filter((country) =>
+      country.name.common.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredCountries(filtered);
   };
 
   function handleShowClick(name: string) {
     setSearch(name);
-    setCountry(filteredCountries[0]);
   }
 
-  const filteredCountries = countries.filter((country) =>
-    country.name.common.toLowerCase().includes(search.toLowerCase())
-  );
-
   useEffect(() => {
-    if (country.capital) {
-      CountriesApi.getWeather(country.capital).then((data) => {
+    if (filteredCountries.length === 1) {
+      console.log(filteredCountries[0].capital);
+      CountriesApi.getWeather(filteredCountries[0].capital).then((data) => {
         setWeather(data);
       });
     }
-  }, [country]);
-
-  useEffect(() => {
-    if (weather.weather) {
-      console.log(weather);
+    if(weather.weather) {
+      console.log("weather: ", weather);
       CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
         setIcon(data);
       });
     }
-  }, [weather]);
+  }, [filteredCountries, weather]);
+
+  // useEffect(() => {
+  //   console.log("weather: ", weather);
+  //   if (weather.weather) {
+  //     console.log(weather);
+  //     CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
+  //       setIcon(data);
+  //       console.log(data);
+  //     });
+  //   }
+  // }, [weather]);
 
   const hook = () => {
     CountriesApi.getAll().then((data) => {
@@ -107,6 +113,10 @@ function Countries() {
   };
 
   useEffect(hook, []);
+
+  useEffect(() => {
+    setFilteredCountries(countries);
+  }, [countries]);
 
   return (
     <>
@@ -121,8 +131,10 @@ function Countries() {
         <>
           <Country country={filteredCountries[0]} />
           {weather.main ? (
-            <div>
-              <h2>Weather in {filteredCountries[0].capital}</h2>
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-3xl font-bold">
+                Weather in {filteredCountries[0].capital}
+              </h2>
               <p>Temperature: {weather.main.temp} Celsius</p>
               <img src={icon} alt="weather icon" />
               <p>Wind: {weather.wind.speed} m/s</p>
