@@ -44,6 +44,24 @@ function Input({
   );
 }
 
+function Weather({ weather }: { weather: any }) {
+  if (!weather.main) {
+    return null;
+  }
+
+  return (
+    <div>
+      <h2 className="text-3xl font-bold p-2">Weather in {weather.name}</h2>
+      <p>Temperature: {weather.main.temp} Celcius</p>
+      <img
+        src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+        alt="weather icon"
+      />
+      <p>Wind: {weather.wind.speed} m/s</p>
+    </div>
+  );
+}
+
 function Country({ country }: { country: ICountry }) {
   return (
     <div>
@@ -56,7 +74,8 @@ function Country({ country }: { country: ICountry }) {
           <li key={language}>{language}</li>
         ))}
       </ul>
-      <div>{country.flag}</div>
+      {/* <div>{country.flag}</div> */}
+      <img src={country.flags.svg} alt="flag" width="40" height="40" />
     </div>
   );
 }
@@ -65,46 +84,14 @@ function Countries() {
   const [countries, setCountries] = useState([] as ICountry[]);
   const [search, setSearch] = useState("");
   const [weather, setWeather] = useState({} as any);
-  const [icon, setIcon] = useState();
-  const [filteredCountries, setFilteredCountries] = useState([] as ICountry[]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-    const filtered = countries.filter((country) =>
-      country.name.common.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredCountries(filtered);
   };
 
   function handleShowClick(name: string) {
     setSearch(name);
   }
-
-  useEffect(() => {
-    if (filteredCountries.length === 1) {
-      console.log(filteredCountries[0].capital);
-      CountriesApi.getWeather(filteredCountries[0].capital).then((data) => {
-        setWeather(data);
-      });
-    }
-    if(weather.weather) {
-      console.log("weather: ", weather);
-      CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
-        setIcon(data);
-      });
-    }
-  }, [filteredCountries, weather]);
-
-  // useEffect(() => {
-  //   console.log("weather: ", weather);
-  //   if (weather.weather) {
-  //     console.log(weather);
-  //     CountriesApi.getWeatherIcon(weather.weather[0].icon).then((data) => {
-  //       setIcon(data);
-  //       console.log(data);
-  //     });
-  //   }
-  // }, [weather]);
 
   const hook = () => {
     CountriesApi.getAll().then((data) => {
@@ -114,9 +101,18 @@ function Countries() {
 
   useEffect(hook, []);
 
+  const filteredCountries = countries.filter((country) =>
+    country.name.common.toLowerCase().includes(search.toLowerCase())
+  );
+
   useEffect(() => {
-    setFilteredCountries(countries);
-  }, [countries]);
+    if (filteredCountries.length === 1) {
+      console.log(filteredCountries[0].capital);
+      CountriesApi.getWeather(filteredCountries[0].capital).then((data) => {
+        setWeather(data);
+      });
+    }
+  }, [search]);
 
   return (
     <>
@@ -128,33 +124,24 @@ function Countries() {
       {filteredCountries.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : filteredCountries.length === 1 ? (
-        <>
+        <div>
           <Country country={filteredCountries[0]} />
-          {weather.main ? (
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-3xl font-bold">
-                Weather in {filteredCountries[0].capital}
-              </h2>
-              <p>Temperature: {weather.main.temp} Celsius</p>
-              <img src={icon} alt="weather icon" />
-              <p>Wind: {weather.wind.speed} m/s</p>
-            </div>
-          ) : null}
-        </>
+          <Weather weather={weather} />
+        </div>
       ) : (
         <ul>
           {filteredCountries.map((country) => (
-            <div
+            <li
               key={country.name.common}
               className="flex flex-row items-center justify-center"
             >
-              <li>{country.name.common}</li>
+              <p>{country.name.common}</p>
               <Button
                 text="Show"
                 type="button"
                 onClick={() => handleShowClick(country.name.common)}
               />
-            </div>
+            </li>
           ))}
         </ul>
       )}

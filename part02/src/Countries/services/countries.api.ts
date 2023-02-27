@@ -16,10 +16,4 @@ function getWeather(city: string) {
   return request.then((response) => response.data);
 }
 
-function getWeatherIcon(icon: string) {
-  const url = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-  const request = axios.get(url);
-  return request.then((response) => response.data);
-}
-
-export default { getAll, getWeather, getWeatherIcon };
+export default { getAll, getWeather };
