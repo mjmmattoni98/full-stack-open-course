@@ -3,6 +3,7 @@ const app = express();
 const morgan = require("morgan");
 
 app.use(express.json());
+app.use(cors());
 
 morgan.token("body", (req, res) => {
   return JSON.stringify(req.body);
