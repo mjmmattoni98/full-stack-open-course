@@ -52,28 +52,26 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 const generateId = () => {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-  return maxId + 1;
+  return Math.floor(Math.random() * Number.MAX_VALUE);
 };
 
-app.post("/api/notes", (request, response) => {
+app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  if (!body.content) {
+  if (!body.name || !body.number) {
     return response.status(400).json({
       error: "content missing",
     });
   }
 
-  const note = {
-    content: body.content,
-    important: body.important || false,
+  const person = {
+    ...body,
     id: generateId(),
   };
 
-  persons = persons.concat(note);
+  persons = persons.concat(person);
 
-  response.json(note);
+  response.json(person);
 });
 
 app.delete("/api/persons/:id", (request, response) => {
