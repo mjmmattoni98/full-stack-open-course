@@ -1,26 +1,30 @@
-import axios from 'axios'
+import axios from "axios";
 import IPerson from "../types";
 
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = "/api/persons";
 
-const getAll = (): Promise<IPerson> => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
-}
+const getAll = async (): Promise<IPerson> => {
+  const request = axios.get(baseUrl);
+  const response = await request;
+  return response.data;
+};
 
-const create = (newObject: IPerson): Promise<IPerson> => {
-  const request = axios.post(baseUrl, newObject)
-  return request.then(response => response.data)
-}
+const create = async (newObject: IPerson): Promise<IPerson> => {
+  const request = axios.post(baseUrl, newObject);
+  const response = await request;
+  return response.data;
+};
 
-const update = (id: number, newObject: IPerson): Promise<IPerson> => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject)
-  return request.then(response => response.data)
-}
+const update = async (id: number, newObject: IPerson): Promise<IPerson> => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  const response = await request;
+  return response.data;
+};
 
-const remove = (id: number): Promise<IPerson> => {
-  const request = axios.delete(`${baseUrl}/${id}`)
-  return request.then(response => response.data)
-}
+const remove = async (id: number): Promise<IPerson> => {
+  const request = axios.delete(`${baseUrl}/${id}`);
+  const response = await request;
+  return response.data;
+};
 
-export default { getAll, create, update, remove }
+export default { getAll, create, update, remove };
