@@ -70,7 +70,7 @@ const generateId = () => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  if (!body.name || !body.number) {
+  if (!body.name || !body.phone) {
     return response.status(400).json({
       error: "content missing",
     });
