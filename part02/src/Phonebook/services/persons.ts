@@ -3,7 +3,7 @@ import IPerson from "../types";
 
 const baseUrl = "/api/persons";
 
-const getAll = async (): Promise<IPerson> => {
+const getAll = async (): Promise<IPerson[]> => {
   const request = axios.get(baseUrl);
   const response = await request;
   return response.data;

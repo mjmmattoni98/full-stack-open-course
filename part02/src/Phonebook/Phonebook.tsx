@@ -192,8 +192,8 @@ function Phonebook() {
   }
 
   const hook = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    PersonService.getAll().then((response) => {
+      setPersons(response);
     });
   };
 
