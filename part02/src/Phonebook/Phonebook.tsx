@@ -133,7 +133,6 @@ function Phonebook() {
     }
     const oldPerson = persons.find((person) => person.name === newName);
     if (oldPerson) {
-      // alert(`${newName} is already added to phonebook`);
       updatePerson(oldPerson.id, { ...personObject, id: oldPerson.id });
       return;
     }
