@@ -6,8 +6,8 @@ function App() {
   return (
     <div className="bg-cyan-100 flex flex-col justify-center items-center w-screen h-screen">
       {/* <Courses /> */}
-      {/* <Phonebook /> */}
-      <Countries />
+      <Phonebook />
+      {/* <Countries /> */}
     </div>
   );
 }
